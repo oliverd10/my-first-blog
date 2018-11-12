@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}UserProfile{% endblock %}
+
+{% block content %}
+	{{ object.username }}
+	{{ object.email}}
+	<br><hr>
+	Tweets:
+	{% for tweet in object.tweet_set.all %}
+		{{ tweet.content }} <br>
+	{% endfor %}
+
+<br><hr>
+
+<a class="btn btn-primary" href="{% url 'user_profiles:followView' username=object.username %}"> {% if following %}UnFollow {% else %} Follow {% endif %} </a>
+
+<br> <hr>
+following <small>({{object.profile.get_following.count}})</small>: <br>
+{% for user in object.profile.get_following %}
+	<a href="{% url 'user_profiles:user_profile' user.username %}">{{ user.username }}</a>	 <br>
+
+{% empty %}
+<h6>Not Following any Users</h6>
+{% endfor %}
+
+<hr>
+followed <small>({{object.followed_by.all.count}})</small>: <br>
+{% for profile in object.followed_by.all %}
+	<a href="/accounts/user_profile/{{ profile.user.username }}/">{{ profile.user.username }}</a>	 <br>
+
+{% empty %}
+<h6>Not Following any Users</h6>
+{% endfor %}
+
+
+{% endblock %}
